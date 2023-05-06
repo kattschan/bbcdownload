@@ -8,8 +8,6 @@
   import Snackbar, { Actions } from '@smui/snackbar';
   import Tab from '@smui/tab';
   import TabBar from '@smui/tab-bar';
-  import { Player, Hls } from '@vime/svelte';
-
   // Contact the API to get the items
   let items = ''
   fetch('https://api.bloopertrack.club/get').then(res => res.json()).then(res => {
