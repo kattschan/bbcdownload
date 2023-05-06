@@ -339,17 +339,17 @@ let active = 'List';
       }
     </style>
     {:else if active === 'Watch UK Feed'}
-    <Player controls>
-      <Hls version="latest" poster="/media/poster.png">
+    <vm-player controls>
+      <vm-hls version="latest" poster="/media/poster.png">
         <source data-src="https://origin-fra01-ed.pzaz.tv/live/bbc-news-hd/playlist.m3u8" type="application/x-mpegURL" />
-      </Hls>
-    </Player>
+      </vm-hls>
+    </vm-player>
     {:else if active === 'Watch Europe Feed'}
-    <Player controls>
-      <Hls version="latest" poster="/media/poster.png">
+    <vm-player controls>
+      <vm-hls version="latest" poster="/media/poster.png">
         <source data-src="https://origin-fra01-ed.pzaz.tv/live/bbc-world-europe/playlist.m3u8" type="application/x-mpegURL" />
-      </Hls>
-    </Player>
+      </vm-hls>
+    </vm-player>
     {/if}
 
     <Snackbar leading bind:this={snackbar}>
