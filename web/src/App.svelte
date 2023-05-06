@@ -1,13 +1,9 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
   import Fab, { Icon } from '@smui/fab';
   import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
   import Dialog, { Title, Content, Actions, InitialFocus } from '@smui/dialog';
   import Button, { Label } from '@smui/button';
-  import Slider from '@smui/slider';
-  import FormField from '@smui/form-field';
   import Textfield from '@smui/textfield';
 
   import Tab from '@smui/tab';
@@ -20,6 +16,7 @@
 let open = false;
 let time = null;
 let description = null;
+let recordings = null;
 function a() {
   fetch('https://api.bloopertrack.club/post', {
     method: 'POST',
@@ -33,9 +30,17 @@ function a() {
   }).then(() => {
     active = 'List';
   });
-  console.log(body)
   console.log('time:' + time + ', description:' + description)
 }
+function rd() {
+
+}
+ // Contact https://bbcdownload.uk.to/getrecords to get the last 15 recordings with allowed CORS
+fetch('https://bbcdownload.uk.to/getrecords').then(res => res.json()).then(res => {
+  recordings = res;
+});
+
+  console.log(recordings);
 let active = 'List';
 </script>
 
@@ -47,13 +52,13 @@ let active = 'List';
   </div>
   <h1>Welcome to Bloopertrack</h1>
   <div>
-    <TabBar tabs={['List', 'Report', 'Watch']} let:tab bind:active>
+    <TabBar tabs={['Bloopers', 'Report', 'View Recordings', 'Record', 'Watch' ]} let:tab bind:active>
       <Tab {tab}>
         <Label>{tab}</Label>
       </Tab>
     </TabBar>
    
-    {#if active === 'List'}
+    {#if active === 'Bloopers'}
     <div class="card">
       <DataTable>
         <Head>
@@ -83,12 +88,10 @@ let active = 'List';
       />
     </div>
     <div class="reportText">
-      <Textfield class="reportText" textarea bind:value={description} label="Description" variant="outlined">
+      <Textfield class="reportText" bind:value={description} label="Description" variant="outlined">
       </Textfield>
     </div>
-      <Button class="reportButton" on:click={() => a()} variant="raised">
-        <Label>Report</Label>
-      </Button>
+
     <style>
       .reportText {
         padding: 1em;
@@ -98,8 +101,48 @@ let active = 'List';
         padding: 1em;
       }
     </style>
-    {:else if active === 'About Us'}
-
+    {:else if active === 'View Recordings'}
+    <div class="card">
+      <DataTable class="recordingTables">
+        <Head>
+          <Row>
+            <Cell>Start Time</Cell>
+            <Cell>End Time</Cell>
+            <Cell>Status</Cell>
+            <Cell>Channel</Cell>
+            <Cell>View</Cell>
+          </Row>
+        </Head>
+        <Body>
+          {#each recordings.rows as recording}
+         <Row>
+              <Cell>{recording.start_time}</Cell>
+              <Cell>{recording.end_time}</Cell>
+              <Cell>{recording.status}</Cell>
+              <Cell>{recording.channel}</Cell>
+              <Button href="https://bbcdownload.uk.to{recording.filename}">View</Button>
+            </Row>
+          {/each}
+        </Body>
+      </DataTable>
+      </div>
+      <style>
+        /* Put the button above the datatable and centre them both */
+        .recordingButton {
+          margin: auto;
+          display: block;
+        }
+        .recordingTables {
+          margin-top: 1em;
+        }
+      </style>
+    
+    {:else if active === 'Record'}
+    <Textfield bind:value={month} label="Month" type="number" />
+    <Textfield bind:value={day} label="Day" type="number" />
+    <Textfield bind:value={hour} label="Hour" type="number" />
+    <Textfield bind:value={minute} label="Minute" type="number" />
+    <Textfield bind:value={second} label="Second" type="number" />
     {/if}
 
 </main>
